@@ -1,0 +1,21 @@
+{
+  "name": "dms/package.blog",
+  "description": "The blog package",
+  "authors": [
+    {
+      "name": "Ali Hamza",
+      "email": "ali@iddigital.com.au"
+    }
+  ],
+  "minimum-stability": "stable",
+  "autoload": {
+    "psr-4": {
+      "Dms\\Package\\Blog\\": "./src/",
+    }
+  },
+  "require": {
+    "php": ">=7.0.0",
+    "dms/core": "dev-master",
+    "dms/common.structure": "dev-master"
+  }
+}
