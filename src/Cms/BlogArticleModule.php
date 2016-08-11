@@ -10,10 +10,14 @@ use Dms\Core\Common\Crud\Definition\CrudModuleDefinition;
 use Dms\Core\Common\Crud\Definition\Form\CrudFormDefinition;
 use Dms\Core\Common\Crud\Definition\Table\SummaryTableDefinition;
 use Dms\Core\Util\IClock;
-use Dms\Package\Blog\Core\BlogArticle;
-use Dms\Package\Blog\Core\BlogCategory;
-use Dms\Package\Blog\Core\IBlogArticleRepository;
-use Dms\Package\Blog\Core\IBlogCategoryRepository;
+use Dms\Library\Slug\Cms\SlugField;
+use Dms\Package\Blog\Domain\Entities\BlogArticle;
+use Dms\Package\Blog\Domain\Entities\BlogAuthor;
+use Dms\Package\Blog\Domain\Entities\BlogCategory;
+use Dms\Package\Blog\Domain\Services\Config\BlogConfiguration;
+use Dms\Package\Blog\Domain\Services\Persistence\IBlogArticleRepository;
+use Dms\Package\Blog\Domain\Services\Persistence\IBlogAuthorRepository;
+use Dms\Package\Blog\Domain\Services\Persistence\IBlogCategoryRepository;
 
 class BlogArticleModule extends CrudModule
 {
@@ -28,35 +32,40 @@ class BlogArticleModule extends CrudModule
     private $blogCategoryRepository;
 
     /**
-     * ResourceCategoriesModule constructor.
-     * @param IBlogArticleRepository $dataSource
-     * @param IAuthSystem $authSystem
-     * @param IBlogCategoryRepository $blogCategoryRepository
-     * @param IClock $clock
+     * @var IBlogAuthorRepository
      */
-    public function __construct(IBlogArticleRepository $dataSource, IAuthSystem $authSystem, IBlogCategoryRepository $blogCategoryRepository, ICLock $clock) {
+    private $blogAuthorRepository;
+
+    /**
+     * @var BlogConfiguration
+     */
+    private $blogConfiguration;
+
+    /**
+     * ResourceCategoriesModule constructor.
+     *
+     * @param IBlogArticleRepository  $dataSource
+     * @param IAuthSystem             $authSystem
+     * @param IBlogCategoryRepository $blogCategoryRepository
+     * @param IBlogAuthorRepository   $blogAuthorRepository
+     * @param IClock                  $clock
+     * @param BlogConfiguration       $blogConfiguration
+     */
+    public function __construct(
+        IBlogArticleRepository $dataSource,
+        IAuthSystem $authSystem,
+        IBlogCategoryRepository $blogCategoryRepository,
+        IBlogAuthorRepository $blogAuthorRepository,
+        IClock $clock,
+    BlogConfiguration $blogConfiguration
+    ) {
         $this->blogCategoryRepository = $blogCategoryRepository;
+        $this->clock                  = $clock;
+        $this->blogAuthorRepository = $blogAuthorRepository;
+        $this->blogConfiguration = $blogConfiguration;
 
         parent::__construct($dataSource, $authSystem);
-
-        $this->clock = $clock;
     }
-
-    /**
-     * @var boolean
-     */
-    public $allowSharing;
-
-    /**
-     * @var boolean
-     */
-    public $allowCommenting;
-
-    /**
-     * @var integer|null
-     */
-    public $categoryId;
-
 
     /**
      * Defines the structure of this module.
@@ -65,10 +74,10 @@ class BlogArticleModule extends CrudModule
      */
     protected function defineCrudModule(CrudModuleDefinition $module)
     {
-        $module->name('blog-articles');
+        $module->name('articles');
 
         $module->metadata([
-            'icon' => 'newspaper-o'
+            'icon' => 'newspaper-o',
         ]);
 
         $module->labelObjects()->fromProperty(BlogArticle::TITLE);
@@ -76,15 +85,28 @@ class BlogArticleModule extends CrudModule
         $module->crudForm(function (CrudFormDefinition $form) {
             $form->section('Details', [
                 $form->field(
-                    Field::create('blog_category_id', 'Category')->entityIdFrom($this->blogCategoryRepository)->labelledBy(BlogCategory::NAME)->required()
-                )->bindToProperty(BlogArticle::CATEGORY_ID),
+                    Field::create('category', 'Category')
+                        ->entityFrom($this->blogCategoryRepository)
+                        ->labelledBy(BlogCategory::NAME)
+                )->bindToProperty(BlogArticle::CATEGORY),
+                //
+                $form->field(
+                    Field::create('author', 'Author')
+                        ->entityFrom($this->blogAuthorRepository)
+                        ->labelledBy(BlogAuthor::NAME)
+                        ->required()
+                )->bindToProperty(BlogArticle::AUTHOR),
                 //
                 $form->field(
                     Field::create('title', 'Title')->string()->required()
                 )->bindToProperty(BlogArticle::TITLE),
-                //
+            ]);
+            
+            SlugField::build($form, 'slug', 'URL Friendly Name', $this->dataSource, $this->blogConfiguration->getSlugGenerator(), 'title', BlogArticle::SLUG);
+            
+            $form->continueSection([
                 $form->field(
-                    Field::create('sub_title', 'Sub Title')->string()
+                    Field::create('sub_title', 'Sub Title')->string()->defaultTo('')
                 )->bindToProperty(BlogArticle::SUB_TITLE),
                 //
                 $form->field(
@@ -92,11 +114,13 @@ class BlogArticleModule extends CrudModule
                 )->bindToProperty(BlogArticle::DATE),
                 //
                 $form->field(
-                    Field::create('extract', 'Extract')->string()->multiline()
+                    Field::create('extract', 'Extract')->string()->multiline()->defaultTo('')
                 )->bindToProperty(BlogArticle::EXTRACT),
                 //
                 $form->field(
-                    Field::create('featured_image', 'Featured Image')->image()->moveToPathWithRandomFileName(public_path('files/blogs/images'))
+                    Field::create('featured_image', 'Featured Image')
+                        ->image()
+                        ->moveToPathWithRandomFileName($this->blogConfiguration->getFeaturedImagePath())
                 )->bindToProperty(BlogArticle::FEATURED_IMAGE),
                 //
                 $form->field(
@@ -104,27 +128,15 @@ class BlogArticleModule extends CrudModule
                 )->bindToProperty(BlogArticle::ARTICLE_CONTENT),
             ]);
 
-            $form->section('Author', [
-                $form->field(
-                    Field::create('author_name', 'Author Name')->string()
-                )->bindToProperty(BlogArticle::AUTHOR_NAME),
-                //
-                $form->field(
-                    Field::create('author_role', 'Author Role')->string()
-                )->bindToProperty(BlogArticle::AUTHOR_ROLE),
-                //
-                $form->field(
-                    Field::create('author_link', 'Author Link')->url()
-                )->bindToProperty(BlogArticle::AUTHOR_LINK)
-            ]);
-
             $form->section('Publish Settings', [
                 $form->field(
                     Field::create('is_active', 'Is Active')->bool()
                 )->bindToProperty(BlogArticle::IS_ACTIVE),
+                //
                 $form->field(
                     Field::create('allow_sharing', 'Allow Sharing')->bool()
                 )->bindToProperty(BlogArticle::ALLOW_SHARING),
+                //
                 $form->field(
                     Field::create('allow_commenting', 'Allow Commenting')->bool()
                 )->bindToProperty(BlogArticle::ALLOW_COMMENTING),

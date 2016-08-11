@@ -1,24 +1,38 @@
 {
-  "name": "dms/package.blog",
-  "description": "The blog package",
-  "authors": [
-    {
-      "name": "Ali Hamza",
-      "email": "ali@iddigital.com.au"
+    "name": "dms/package.blog",
+    "description": "The blog package",
+    "authors": [
+        {
+            "name": "Ali Hamza",
+            "email": "ali@iddigital.com.au"
+        }
+    ],
+    "minimum-stability": "stable",
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://api.package.studio/meta/composer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Dms\\Package\\Blog\\": "./src/"
+        }
+    },
+    "require": {
+        "php": ">=7.0.0",
+        "dms/core": "^0.1",
+        "dms/common.structure": "^0.1",
+        "dms/library.slug": "^0.1.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Dms\\Package\\Blog\\Tests\\": "./tests/Tests/",
+            "Dms\\Core\\Tests\\": "./vendor/dms/core/tests/Tests/"
+        }
+    },
+    "require-dev": {
+        "dms/common.testing": "dev-master",
+        "dms/library.testing": "^0.1.0"
     }
-  ],
-  "minimum-stability": "stable",
-  "repositories": [
-    {"type": "composer", "url": "https://api.package.studio/meta/composer"}
-  ],
-  "autoload": {
-    "psr-4": {
-      "Dms\\Package\\Blog\\": "./src/"
-    }
-  },
-  "require": {
-    "php": ">=7.0.0",
-    "dms/core": "dev-master",
-    "dms/common.structure": "dev-master"
-  }
 }

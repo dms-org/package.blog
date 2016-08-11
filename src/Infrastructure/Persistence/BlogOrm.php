@@ -1,11 +1,12 @@
 <?php declare(strict_types = 1);
 
-namespace Dms\Package\Blog\Persistence;
+namespace Dms\Package\Blog\Infrastructure\Persistence;
 
 use Dms\Core\Persistence\Db\Mapping\Definition\Orm\OrmDefinition;
 use Dms\Core\Persistence\Db\Mapping\Orm;
-use Dms\Package\Blog\Core\BlogArticle;
-use Dms\Package\Blog\Core\BlogCategory;
+use Dms\Package\Blog\Domain\Entities\BlogArticle;
+use Dms\Package\Blog\Domain\Entities\BlogAuthor;
+use Dms\Package\Blog\Domain\Entities\BlogCategory;
 
 /**
  * @author Ali Hamza <ali@iddigital.com.au>
@@ -23,7 +24,8 @@ class BlogOrm extends Orm
     {
         $orm->entities([
             BlogCategory::class => BlogCategoryMapper::class,
-            BlogArticle::class => BlogArticleMapper::class
+            BlogAuthor::class   => BlogAuthorMapper::class,
+            BlogArticle::class  => BlogArticleMapper::class,
         ]);
     }
 }

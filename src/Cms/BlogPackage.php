@@ -6,10 +6,12 @@ use Dms\Core\ICms;
 use Dms\Core\Ioc\IIocContainer;
 use Dms\Core\Package\Definition\PackageDefinition;
 use Dms\Core\Package\Package;
-use Dms\Package\Blog\Core\IBlogArticleRepository;
-use Dms\Package\Blog\Core\IBlogCategoryRepository;
-use Dms\Package\Blog\Persistence\DbBlogArticleRepository;
-use Dms\Package\Blog\Persistence\DbBlogCategoryRepository;
+use Dms\Package\Blog\Domain\Services\Persistence\IBlogArticleRepository;
+use Dms\Package\Blog\Domain\Services\Persistence\IBlogAuthorRepository;
+use Dms\Package\Blog\Domain\Services\Persistence\IBlogCategoryRepository;
+use Dms\Package\Blog\Infrastructure\Persistence\DbBlogArticleRepository;
+use Dms\Package\Blog\Infrastructure\Persistence\DbBlogAuthorRepository;
+use Dms\Package\Blog\Infrastructure\Persistence\DbBlogCategoryRepository;
 
 /**
  * @author Ali Hamza <ali@iddigital.com.au>
@@ -23,8 +25,15 @@ class BlogPackage extends Package
      */
     public static function boot(ICms $cms)
     {
-        $cms->getIocContainer()->bind(IIocContainer::SCOPE_SINGLETON, IBlogCategoryRepository::class, DbBlogCategoryRepository::class);
-        $cms->getIocContainer()->bind(IIocContainer::SCOPE_SINGLETON, IBlogArticleRepository::class, DbBlogArticleRepository::class);
+        $repositories = [
+            IBlogCategoryRepository::class => DbBlogCategoryRepository::class,
+            IBlogAuthorRepository::class   => DbBlogAuthorRepository::class,
+            IBlogArticleRepository::class  => DbBlogArticleRepository::class,
+        ];
+
+        foreach ($repositories as $interface => $implementation) {
+            $cms->getIocContainer()->bind(IIocContainer::SCOPE_SINGLETON, $interface, $implementation);
+        }
     }
 
     /**
@@ -43,8 +52,9 @@ class BlogPackage extends Package
         ]);
 
         $package->modules([
-            'blog-categories' => BlogCategoryModule::class,
-            'blog-articles' => BlogArticleModule::class,
+            'categories' => BlogCategoryModule::class,
+            'authors'    => BlogAuthorModule::class,
+            'articles'   => BlogArticleModule::class,
         ]);
     }
 }

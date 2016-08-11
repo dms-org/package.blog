@@ -10,8 +10,12 @@ use Dms\Core\Common\Crud\Definition\CrudModuleDefinition;
 use Dms\Core\Common\Crud\Definition\Form\CrudFormDefinition;
 use Dms\Core\Common\Crud\Definition\Table\SummaryTableDefinition;
 use Dms\Core\Util\IClock;
-use Dms\Package\Blog\Core\BlogCategory;
-use Dms\Package\Blog\Core\IBlogCategoryRepository;
+use Dms\Library\Slug\Cms\SlugField;
+use Dms\Package\Blog\Domain\Entities\BlogArticle;
+use Dms\Package\Blog\Domain\Entities\BlogAuthor;
+use Dms\Package\Blog\Domain\Entities\BlogCategory;
+use Dms\Package\Blog\Domain\Services\Config\BlogConfiguration;
+use Dms\Package\Blog\Domain\Services\Persistence\IBlogCategoryRepository;
 
 class BlogCategoryModule extends CrudModule
 {
@@ -21,16 +25,23 @@ class BlogCategoryModule extends CrudModule
     protected $clock;
 
     /**
-     * ResourceCategoriesModule constructor.
-     * @param IBlogCategoryRepository $dataSource
-     * @param IAuthSystem $authSystem
-     * @param IClock $clock
+     * @var BlogConfiguration
      */
-    public function __construct(IBlogCategoryRepository $dataSource, IAuthSystem $authSystem, ICLock $clock)
-    {
-        parent::__construct($dataSource, $authSystem);
+    private $blogConfiguration;
 
-        $this->clock = $clock;
+    /**
+     * BlogCategoryModule constructor.
+     *
+     * @param IBlogCategoryRepository $dataSource
+     * @param IAuthSystem             $authSystem
+     * @param IClock                  $clock
+     * @param BlogConfiguration       $blogConfiguration
+     */
+    public function __construct(IBlogCategoryRepository $dataSource, IAuthSystem $authSystem, IClock $clock, BlogConfiguration $blogConfiguration)
+    {
+        $this->clock             = $clock;
+        $this->blogConfiguration = $blogConfiguration;
+        parent::__construct($dataSource, $authSystem);
     }
 
     /**
@@ -40,10 +51,10 @@ class BlogCategoryModule extends CrudModule
      */
     protected function defineCrudModule(CrudModuleDefinition $module)
     {
-        $module->name('blog-categories');
+        $module->name('categories');
 
         $module->metadata([
-            'icon' => 'list'
+            'icon' => 'list',
         ]);
 
         $module->labelObjects()->fromProperty(BlogCategory::NAME);
@@ -59,8 +70,11 @@ class BlogCategoryModule extends CrudModule
                 )->bindToProperty(BlogCategory::IS_ACTIVE),
             ]);
 
+            SlugField::build($form, 'slug', 'URL Friendly Name', $this->dataSource, $this->blogConfiguration->getSlugGenerator(), 'name', BlogAuthor::SLUG);
+
             if ($form->isCreateForm()) {
                 $form->onSubmit(function (BlogCategory $blogCategory) {
+                    $blogCategory->articles  = BlogArticle::collection();
                     $blogCategory->createdAt = new DateTime($this->clock->utcNow());
                     $blogCategory->updatedAt = new DateTime($this->clock->utcNow());
                 });
@@ -77,6 +91,8 @@ class BlogCategoryModule extends CrudModule
 
         $module->summaryTable(function (SummaryTableDefinition $table) {
             $table->mapProperty(BlogCategory::NAME)->to(Field::create('name', 'Name')->string());
+            $table->mapProperty(BlogCategory::ARTICLES . '.count()')->to(Field::create('articles', '# Articles')->int());
+            $table->mapProperty(BlogCategory::UPDATED_AT)->to(Field::create('updated', 'Updated At')->dateTime());
 
             $table->view('all', 'All')
                 ->asDefault()

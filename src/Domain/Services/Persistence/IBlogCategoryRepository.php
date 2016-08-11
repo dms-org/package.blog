@@ -1,11 +1,12 @@
 <?php declare(strict_types = 1);
 
-namespace Dms\Package\Blog\Core;
+namespace Dms\Package\Blog\Domain\Services\Persistence;
 
 use Dms\Core\Exception;
 use Dms\Core\Model\ICriteria;
 use Dms\Core\Model\ISpecification;
 use Dms\Core\Persistence\IRepository;
+use Dms\Package\Blog\Domain\Entities\BlogCategory;
 
 /**
  * @author Ali Hamza <ali@iddigital.com.au>
