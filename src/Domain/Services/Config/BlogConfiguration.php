@@ -20,15 +20,22 @@ class BlogConfiguration
     protected $slugGenerator;
 
     /**
+     * @var callable|null
+     */
+    protected $articlePreviewCallback;
+
+    /**
      * BlogConfiguration constructor.
      *
      * @param string         $featuredImagePath
      * @param ISlugGenerator $slugGenerator
+     * @param callable       $articlePreviewCallback
      */
-    public function __construct(string $featuredImagePath, ISlugGenerator $slugGenerator)
+    public function __construct(string $featuredImagePath, ISlugGenerator $slugGenerator, callable $articlePreviewCallback = null)
     {
-        $this->featuredImagePath = $featuredImagePath;
-        $this->slugGenerator     = $slugGenerator;
+        $this->featuredImagePath      = $featuredImagePath;
+        $this->slugGenerator          = $slugGenerator;
+        $this->articlePreviewCallback = $articlePreviewCallback;
     }
 
     /**
@@ -53,5 +60,13 @@ class BlogConfiguration
     public function getSlugGenerator() : ISlugGenerator
     {
         return $this->slugGenerator;
+    }
+
+    /**
+     * @return callable|null
+     */
+    public function getArticlePreviewCallback()
+    {
+        return $this->articlePreviewCallback;
     }
 }

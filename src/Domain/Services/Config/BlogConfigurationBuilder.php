@@ -21,6 +21,11 @@ class BlogConfigurationBuilder
     protected $slugGenerator;
 
     /**
+     * @var callable|null
+     */
+    protected $articlePreviewCallback;
+
+    /**
      * @param string $featuredImagePath
      *
      * @return BlogConfigurationBuilder
@@ -52,11 +57,27 @@ class BlogConfigurationBuilder
         return $this->setSlugGenerator(new DashedSlugGenerator());
     }
 
+    /**
+     * @param callable|null $articlePreviewCallback
+     *
+     * @return BlogConfigurationBuilder
+     */
+    public function setArticlePreviewCallback(callable $articlePreviewCallback = null) : self
+    {
+        $this->articlePreviewCallback = $articlePreviewCallback;
+
+        return $this;
+    }
+
+    /**
+     * @return BlogConfiguration
+     */
     public function build() : BlogConfiguration
     {
         return new BlogConfiguration(
             $this->featuredImagePath,
-            $this->slugGenerator
+            $this->slugGenerator,
+            $this->articlePreviewCallback
         );
     }
 }

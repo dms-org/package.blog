@@ -4,6 +4,7 @@ namespace Dms\Package\Blog\Cms;
 
 use Dms\Common\Structure\DateTime\DateTime;
 use Dms\Common\Structure\Field;
+use Dms\Common\Structure\Web\Html;
 use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\Common\Crud\CrudModule;
 use Dms\Core\Common\Crud\Definition\CrudModuleDefinition;
@@ -57,12 +58,12 @@ class BlogArticleModule extends CrudModule
         IBlogCategoryRepository $blogCategoryRepository,
         IBlogAuthorRepository $blogAuthorRepository,
         IClock $clock,
-    BlogConfiguration $blogConfiguration
+        BlogConfiguration $blogConfiguration
     ) {
         $this->blogCategoryRepository = $blogCategoryRepository;
         $this->clock                  = $clock;
-        $this->blogAuthorRepository = $blogAuthorRepository;
-        $this->blogConfiguration = $blogConfiguration;
+        $this->blogAuthorRepository   = $blogAuthorRepository;
+        $this->blogConfiguration      = $blogConfiguration;
 
         parent::__construct($dataSource, $authSystem);
     }
@@ -81,6 +82,16 @@ class BlogArticleModule extends CrudModule
         ]);
 
         $module->labelObjects()->fromProperty(BlogArticle::TITLE);
+
+        if ($this->blogConfiguration->getArticlePreviewCallback()) {
+            $module->objectAction('preview')
+                ->returns(Html::class)
+                ->handler(function (BlogArticle $article) {
+                    $previewCallback = $this->blogConfiguration->getArticlePreviewCallback();
+
+                    return new Html($previewCallback($article));
+                });
+        }
 
         $module->crudForm(function (CrudFormDefinition $form) {
             $form->section('Details', [
@@ -101,9 +112,9 @@ class BlogArticleModule extends CrudModule
                     Field::create('title', 'Title')->string()->required()
                 )->bindToProperty(BlogArticle::TITLE),
             ]);
-            
+
             SlugField::build($form, 'slug', 'URL Friendly Name', $this->dataSource, $this->blogConfiguration->getSlugGenerator(), 'title', BlogArticle::SLUG);
-            
+
             $form->continueSection([
                 $form->field(
                     Field::create('sub_title', 'Sub Title')->string()->defaultTo('')

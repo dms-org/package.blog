@@ -135,7 +135,7 @@ class BlogArticleModuleTest extends CrudModuleTest
             'is_active'        => true,
         ]);
 
-        $expected              = new BlogArticle(
+        $expected = new BlogArticle(
             $author = new BlogAuthor('Name', 'slug', 'role', new Html('bio')),
             $category = new BlogCategory('Category', 'category', true, new MockClock('2000-01-01 00:00:00')),
             'title',
@@ -156,5 +156,20 @@ class BlogArticleModuleTest extends CrudModuleTest
         $category->setId(1);
 
         $this->assertEquals($expected, $article);
+    }
+
+    public function testPreviewAction()
+    {
+        $article                 = $this->getMockWithoutInvokingTheOriginalConstructor(BlogArticle::class);
+        $article->articleContent = new Html('content');
+        $this->dataSource->save($article);
+
+        /** @var Html $preview */
+        $preview = $this->module->getObjectAction('preview')->run(
+            ['object' => $article->getId()]
+        );
+
+        $this->assertInstanceOf(Html::class, $preview);
+        $this->assertSame('preview:content', $preview->asString());
     }
 }

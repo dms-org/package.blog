@@ -64,13 +64,15 @@ class BlogCategoryModule extends CrudModule
                 $form->field(
                     Field::create('name', 'Name')->string()->required()
                 )->bindToProperty(BlogCategory::NAME),
-                //
+            ]);
+
+            SlugField::build($form, 'slug', 'URL Friendly Name', $this->dataSource, $this->blogConfiguration->getSlugGenerator(), 'name', BlogAuthor::SLUG);
+
+            $form->continueSection([
                 $form->field(
                     Field::create('is_active', 'Is Active')->bool()
                 )->bindToProperty(BlogCategory::IS_ACTIVE),
             ]);
-
-            SlugField::build($form, 'slug', 'URL Friendly Name', $this->dataSource, $this->blogConfiguration->getSlugGenerator(), 'name', BlogAuthor::SLUG);
 
             if ($form->isCreateForm()) {
                 $form->onSubmit(function (BlogCategory $blogCategory) {

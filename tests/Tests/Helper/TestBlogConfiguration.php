@@ -4,6 +4,7 @@ namespace Dms\Package\Blog\Tests\Helper;
 
 use Dms\Core\Exception;
 use Dms\Library\Slug\Generator\DashedSlugGenerator;
+use Dms\Package\Blog\Domain\Entities\BlogArticle;
 use Dms\Package\Blog\Domain\Services\Config\BlogConfiguration;
 
 /**
@@ -18,7 +19,10 @@ class TestBlogConfiguration
     {
         return new BlogConfiguration(
             dirname(__DIR__),
-            new DashedSlugGenerator()
+            new DashedSlugGenerator(),
+            function (BlogArticle $article) {
+                return 'preview:' . $article->articleContent->asString();
+            }
         );
     }
 }

@@ -16,6 +16,9 @@ class BlogConfigurationBuilderTest extends CmsTestCase
         BlogConfiguration::builder()
             ->setFeaturedImagePath(__DIR__)
             ->useDashedSlugGenerator()
+            ->setArticlePreviewCallback(function () {
+                
+            })
             ->build();
     }
 }
