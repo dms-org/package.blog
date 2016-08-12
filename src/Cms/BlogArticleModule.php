@@ -141,7 +141,7 @@ class BlogArticleModule extends CrudModule
 
             $form->section('Publish Settings', [
                 $form->field(
-                    Field::create('is_active', 'Is Active')->bool()
+                    Field::create('is_active', 'Published?')->bool()
                 )->bindToProperty(BlogArticle::IS_ACTIVE),
                 //
                 $form->field(
@@ -171,6 +171,8 @@ class BlogArticleModule extends CrudModule
 
         $module->summaryTable(function (SummaryTableDefinition $table) {
             $table->mapProperty(BlogArticle::TITLE)->to(Field::create('title', 'Title')->string());
+            $table->mapProperty(BlogArticle::IS_ACTIVE)->to(Field::create('is_active', 'Published')->bool());
+            $table->mapProperty(BlogArticle::UPDATED_AT)->to(Field::create('updated_at', 'Updated At')->dateTime());
 
             $table->view('all', 'All')
                 ->asDefault()

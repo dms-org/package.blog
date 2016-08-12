@@ -79,6 +79,7 @@ class BlogAuthorModule extends CrudModule
 
         $module->summaryTable(function (SummaryTableDefinition $table) {
             $table->mapProperty(BlogAuthor::NAME)->to(Field::create('name', 'Name')->string());
+            $table->mapProperty(BlogAuthor::ROLE)->to(Field::create('role', 'Role')->string());
 
             $table->view('all', 'All')
                 ->asDefault()
