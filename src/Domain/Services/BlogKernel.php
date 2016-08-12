@@ -28,21 +28,33 @@ class BlogKernel
         $this->iocContainer = $iocContainer;
     }
 
+    /**
+     * @return BlogConfiguration
+     */
     public function configuration() : BlogConfiguration
     {
         return $this->iocContainer->get(BlogConfiguration::class);
     }
 
+    /**
+     * @return BlogCategoryLoader
+     */
     public function categories() : BlogCategoryLoader
     {
         return $this->iocContainer->get(BlogCategoryLoader::class);
     }
 
+    /**
+     * @return BlogAuthorLoader
+     */
     public function authors() : BlogAuthorLoader
     {
         return $this->iocContainer->get(BlogAuthorLoader::class);
     }
 
+    /**
+     * @return BlogArticleLoader
+     */
     public function articles() : BlogArticleLoader
     {
         return $this->iocContainer->get(BlogArticleLoader::class);

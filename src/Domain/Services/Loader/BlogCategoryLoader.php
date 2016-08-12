@@ -29,7 +29,7 @@ class BlogCategoryLoader
     /**
      * @return BlogCategory[]
      */
-    public function getCategories() : array
+    public function getAll() : array
     {
         return $this->blogCategoryRepo->matching(
             $this->blogCategoryRepo->criteria()
