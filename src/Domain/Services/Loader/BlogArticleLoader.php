@@ -25,13 +25,17 @@ class BlogArticleLoader
     {
         $this->blogArticleRepo = $blogArticleRepo;
     }
-    
+
     /**
      * @return BlogArticle[]
      */
     public function getAll() : array
     {
-        return $this->blogArticleRepo->getAll();
+        return $this->blogArticleRepo->matching(
+            $this->blogArticleRepo->criteria()
+                ->where(BlogArticle::IS_ACTIVE, '=', true)
+                ->orderByDesc(BlogArticle::DATE)
+        );
     }
 
     /**

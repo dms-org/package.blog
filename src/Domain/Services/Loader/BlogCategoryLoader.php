@@ -33,6 +33,7 @@ class BlogCategoryLoader
     {
         return $this->blogCategoryRepo->matching(
             $this->blogCategoryRepo->criteria()
+                ->where(BlogCategory::IS_ACTIVE, '=', true)
                 ->orderByAsc(BlogCategory::NAME)
         );
     }
