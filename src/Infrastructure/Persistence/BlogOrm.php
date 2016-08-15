@@ -2,6 +2,7 @@
 
 namespace Dms\Package\Blog\Infrastructure\Persistence;
 
+use Dms\Core\Ioc\IIocContainer;
 use Dms\Core\Persistence\Db\Mapping\Definition\Orm\OrmDefinition;
 use Dms\Core\Persistence\Db\Mapping\Orm;
 use Dms\Package\Blog\Domain\Entities\BlogArticle;
@@ -13,6 +14,16 @@ use Dms\Package\Blog\Domain\Entities\BlogCategory;
  */
 class BlogOrm extends Orm
 {
+    /**
+     * BlogOrm constructor.
+     *
+     * @param IIocContainer $iocContainer
+     */
+    public function __construct(IIocContainer $iocContainer)
+    {
+        parent::__construct($iocContainer);
+    }
+
     /**
      * Defines the object mappers registered in the orm.
      *
