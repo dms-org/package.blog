@@ -79,7 +79,7 @@ class BlogArticleMapper extends EntityMapper
 
         $map->property(BlogArticle::ALLOW_COMMENTING)->to('allow_commenting')->asBool();
 
-        $map->property(BlogArticle::IS_ACTIVE)->to('is_active')->asBool();
+        $map->property(BlogArticle::PUBLISHED)->to('published')->asBool();
 
         $map->embedded(BlogArticle::CREATED_AT)->using(new DateTimeMapper('created_at'));
 

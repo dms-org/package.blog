@@ -18,7 +18,7 @@ class BlogCategory extends Entity
     const NAME = 'name';
     const SLUG = 'slug';
     const ARTICLES = 'articles';
-    const IS_ACTIVE = 'isActive';
+    const PUBLISHED = 'published';
     const CREATED_AT = 'createdAt';
     const UPDATED_AT = 'updatedAt';
 
@@ -40,7 +40,7 @@ class BlogCategory extends Entity
     /**
      * @var boolean
      */
-    public $isActive;
+    public $published;
 
     /**
      * @var DateTime
@@ -57,16 +57,16 @@ class BlogCategory extends Entity
      *
      * @param string $name
      * @param string $slug
-     * @param bool   $isActive
+     * @param bool   $published
      * @param IClock $clock
      */
-    public function __construct(string $name, string $slug, bool $isActive, IClock $clock)
+    public function __construct(string $name, string $slug, bool $published, IClock $clock)
     {
         parent::__construct();
 
         $this->name      = $name;
         $this->slug      = $slug;
-        $this->isActive  = $isActive;
+        $this->published = $published;
         $this->createdAt = new DateTime($clock->utcNow());
         $this->updatedAt = new DateTime($clock->utcNow());
         $this->articles  = BlogArticle::collection();
@@ -85,7 +85,7 @@ class BlogCategory extends Entity
 
         $class->property($this->articles)->asType(BlogArticle::collectionType());
 
-        $class->property($this->isActive)->asBool();
+        $class->property($this->published)->asBool();
 
         $class->property($this->createdAt)->asObject(DateTime::class);
 

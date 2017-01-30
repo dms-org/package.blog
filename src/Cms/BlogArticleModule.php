@@ -141,8 +141,8 @@ class BlogArticleModule extends CrudModule
 
             $form->section('Publish Settings', [
                 $form->field(
-                    Field::create('is_active', 'Published?')->bool()
-                )->bindToProperty(BlogArticle::IS_ACTIVE),
+                    Field::create('published', 'Published?')->bool()
+                )->bindToProperty(BlogArticle::PUBLISHED),
                 //
                 $form->field(
                     Field::create('allow_sharing', 'Allow Sharing')->bool()
@@ -171,7 +171,7 @@ class BlogArticleModule extends CrudModule
 
         $module->summaryTable(function (SummaryTableDefinition $table) {
             $table->mapProperty(BlogArticle::TITLE)->to(Field::create('title', 'Title')->string());
-            $table->mapProperty(BlogArticle::IS_ACTIVE)->to(Field::create('is_active', 'Published')->bool());
+            $table->mapProperty(BlogArticle::PUBLISHED)->to(Field::create('published', 'Published')->bool());
             $table->mapProperty(BlogArticle::UPDATED_AT)->to(Field::create('updated_at', 'Updated At')->dateTime());
 
             $table->view('all', 'All')

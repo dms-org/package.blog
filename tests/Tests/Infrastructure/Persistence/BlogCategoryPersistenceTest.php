@@ -31,7 +31,7 @@ class BlogCategoryPersistenceTest extends PersistenceTest
                     'id'         => 1,
                     'name'       => 'test',
                     'slug'       => 'slug',
-                    'is_active'  => true,
+                    'published'  => true,
                     'created_at' => '2000-01-01 00:00:00',
                     'updated_at' => '2000-01-01 00:00:00',
                 ],

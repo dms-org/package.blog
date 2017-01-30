@@ -33,7 +33,7 @@ class BlogCategoryLoader
     {
         return $this->blogCategoryRepo->matching(
             $this->blogCategoryRepo->criteria()
-                ->where(BlogCategory::IS_ACTIVE, '=', true)
+                ->where(BlogCategory::PUBLISHED, '=', true)
                 ->orderByAsc(BlogCategory::NAME)
         );
     }
@@ -49,7 +49,7 @@ class BlogCategoryLoader
         $categories = $this->blogCategoryRepo->matching(
             $this->blogCategoryRepo->criteria()
                 ->where(BlogCategory::SLUG, '=', $slug)
-                ->where(BlogCategory::IS_ACTIVE, '=', true)
+                ->where(BlogCategory::PUBLISHED, '=', true)
         );
 
         if (!$categories) {

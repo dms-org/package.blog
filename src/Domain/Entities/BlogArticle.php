@@ -28,7 +28,7 @@ class BlogArticle extends Entity
     const ARTICLE_CONTENT = 'articleContent';
     const ALLOW_SHARING = 'allowSharing';
     const ALLOW_COMMENTING = 'allowCommenting';
-    const IS_ACTIVE = 'isActive';
+    const PUBLISHED = 'published';
     const CREATED_AT = 'createdAt';
     const UPDATED_AT = 'updatedAt';
 
@@ -90,7 +90,7 @@ class BlogArticle extends Entity
     /**
      * @var boolean
      */
-    public $isActive;
+    public $published;
 
     /**
      * @var DateTime
@@ -116,7 +116,7 @@ class BlogArticle extends Entity
      * @param Html              $articleContent
      * @param bool              $allowSharing
      * @param bool              $allowCommenting
-     * @param bool              $isActive
+     * @param bool              $published
      * @param IClock            $clock
      */
     public function __construct(
@@ -131,7 +131,7 @@ class BlogArticle extends Entity
         Html $articleContent,
         bool $allowSharing,
         bool $allowCommenting,
-        bool $isActive,
+        bool $published,
         IClock $clock
     ) {
         parent::__construct();
@@ -146,7 +146,7 @@ class BlogArticle extends Entity
         $this->articleContent  = $articleContent;
         $this->allowSharing    = $allowSharing;
         $this->allowCommenting = $allowCommenting;
-        $this->isActive        = $isActive;
+        $this->published        = $published;
         $this->createdAt       = new DateTime($clock->utcNow());
         $this->updatedAt       = new DateTime($clock->utcNow());
     }
@@ -181,7 +181,7 @@ class BlogArticle extends Entity
 
         $class->property($this->allowCommenting)->asBool();
 
-        $class->property($this->isActive)->asBool();
+        $class->property($this->published)->asBool();
 
         $class->property($this->createdAt)->asObject(DateTime::class);
 

@@ -33,7 +33,7 @@ class BlogArticleLoader
     {
         return $this->blogArticleRepo->matching(
             $this->blogArticleRepo->criteria()
-                ->where(BlogArticle::IS_ACTIVE, '=', true)
+                ->where(BlogArticle::PUBLISHED, '=', true)
                 ->orderByDesc(BlogArticle::DATE)
         );
     }
@@ -49,7 +49,7 @@ class BlogArticleLoader
         $categories = $this->blogArticleRepo->matching(
             $this->blogArticleRepo->criteria()
                 ->where(BlogArticle::SLUG, '=', $slug)
-                ->where(BlogArticle::IS_ACTIVE, '=', true)
+                ->where(BlogArticle::PUBLISHED, '=', true)
         );
 
         if (!$categories) {

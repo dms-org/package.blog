@@ -32,7 +32,7 @@ class BlogCategoryMapper extends EntityMapper
 
         $map->property(BlogCategory::SLUG)->to('slug')->unique()->asVarchar(255);
 
-        $map->property(BlogCategory::IS_ACTIVE)->to('is_active')->asBool();
+        $map->property(BlogCategory::PUBLISHED)->to('published')->asBool();
 
         $map->embedded(BlogCategory::CREATED_AT)->using(new DateTimeMapper('created_at'));
 

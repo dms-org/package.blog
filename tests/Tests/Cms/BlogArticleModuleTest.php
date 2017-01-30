@@ -132,7 +132,7 @@ class BlogArticleModuleTest extends CrudModuleTest
             'article_content'  => 'content',
             'allow_sharing'    => true,
             'allow_commenting' => true,
-            'is_active'        => true,
+            'published'        => true,
         ]);
 
         $expected = new BlogArticle(

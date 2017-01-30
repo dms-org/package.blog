@@ -85,7 +85,7 @@ class BlogCategoryModuleTest extends CrudModuleTest
             'name'      => 'Category',
             'slug'      => 'category',
             'info'      => 'info',
-            'is_active' => true,
+            'published' => true,
         ]);
 
         $expected = new BlogCategory(

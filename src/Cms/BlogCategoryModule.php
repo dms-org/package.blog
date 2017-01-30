@@ -70,8 +70,8 @@ class BlogCategoryModule extends CrudModule
 
             $form->continueSection([
                 $form->field(
-                    Field::create('is_active', 'Published?')->bool()
-                )->bindToProperty(BlogCategory::IS_ACTIVE),
+                    Field::create('published', 'Published?')->bool()
+                )->bindToProperty(BlogCategory::PUBLISHED),
             ]);
 
             if ($form->isCreateForm()) {
