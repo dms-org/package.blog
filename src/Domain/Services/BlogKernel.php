@@ -3,6 +3,7 @@
 namespace Dms\Package\Blog\Domain\Services;
 
 use Dms\Core\Ioc\IIocContainer;
+use Dms\Package\Blog\Domain\Services\Comment\BlogArticleCommentingService;
 use Dms\Package\Blog\Domain\Services\Config\BlogConfiguration;
 use Dms\Package\Blog\Domain\Services\Loader\BlogArticleLoader;
 use Dms\Package\Blog\Domain\Services\Loader\BlogAuthorLoader;
@@ -31,7 +32,7 @@ class BlogKernel
     /**
      * @return BlogConfiguration
      */
-    public function configuration() : BlogConfiguration
+    public function configuration(): BlogConfiguration
     {
         return $this->iocContainer->get(BlogConfiguration::class);
     }
@@ -39,7 +40,7 @@ class BlogKernel
     /**
      * @return BlogCategoryLoader
      */
-    public function categories() : BlogCategoryLoader
+    public function categories(): BlogCategoryLoader
     {
         return $this->iocContainer->get(BlogCategoryLoader::class);
     }
@@ -47,7 +48,7 @@ class BlogKernel
     /**
      * @return BlogAuthorLoader
      */
-    public function authors() : BlogAuthorLoader
+    public function authors(): BlogAuthorLoader
     {
         return $this->iocContainer->get(BlogAuthorLoader::class);
     }
@@ -55,8 +56,16 @@ class BlogKernel
     /**
      * @return BlogArticleLoader
      */
-    public function articles() : BlogArticleLoader
+    public function articles(): BlogArticleLoader
     {
         return $this->iocContainer->get(BlogArticleLoader::class);
+    }
+
+    /**
+     * @return BlogArticleCommentingService
+     */
+    public function comments(): BlogArticleCommentingService
+    {
+        return $this->iocContainer->get(BlogArticleCommentingService::class);
     }
 }

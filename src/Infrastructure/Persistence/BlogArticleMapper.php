@@ -10,6 +10,7 @@ use Dms\Core\Persistence\Db\Mapping\Definition\MapperDefinition;
 use Dms\Core\Persistence\Db\Mapping\EntityMapper;
 use Dms\Core\Persistence\Db\Mapping\IOrm;
 use Dms\Package\Blog\Domain\Entities\BlogArticle;
+use Dms\Package\Blog\Domain\Entities\BlogArticleComment;
 use Dms\Package\Blog\Domain\Entities\BlogAuthor;
 use Dms\Package\Blog\Domain\Entities\BlogCategory;
 use Dms\Package\Blog\Domain\Services\Config\BlogConfiguration;
@@ -58,6 +59,14 @@ class BlogArticleMapper extends EntityMapper
             ->manyToOne()
             ->withBidirectionalRelation(BlogCategory::ARTICLES)
             ->withRelatedIdAs($map->getOrm()->getNamespace() . 'category_id');
+
+        $map->relation(BlogArticle::COMMENTS)
+            ->to(BlogArticleComment::class)
+            ->toMany()
+            ->identifying()
+            ->withBidirectionalRelation(BlogArticleComment::ARTICLE)
+            ->orderByDesc('posted_at')
+            ->withParentIdAs($map->getOrm()->getNamespace() . 'article_id');
 
         $map->property(BlogArticle::TITLE)->to('title')->asVarchar(255);
 

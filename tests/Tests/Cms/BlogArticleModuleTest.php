@@ -5,6 +5,7 @@ namespace Dms\Package\Blog\Tests\Cms;
 use Dms\Common\Structure\DateTime\Date;
 use Dms\Common\Structure\FileSystem\Image;
 use Dms\Common\Structure\FileSystem\UploadAction;
+use Dms\Common\Structure\Web\EmailAddress;
 use Dms\Common\Structure\Web\Html;
 use Dms\Core\Auth\IPermission;
 use Dms\Core\Auth\Permission;
@@ -33,7 +34,7 @@ class BlogArticleModuleTest extends CrudModuleTest
     /**
      * @return IMutableObjectSet
      */
-    protected function buildRepositoryDataSource() : IMutableObjectSet
+    protected function buildRepositoryDataSource(): IMutableObjectSet
     {
         return new class(BlogArticle::collection()) extends ArrayRepository implements IBlogArticleRepository
         {
@@ -47,7 +48,7 @@ class BlogArticleModuleTest extends CrudModuleTest
      *
      * @return ICrudModule
      */
-    protected function buildCrudModule(IMutableObjectSet $dataSource, MockAuthSystem $authSystem) : ICrudModule
+    protected function buildCrudModule(IMutableObjectSet $dataSource, MockAuthSystem $authSystem): ICrudModule
     {
         return new BlogArticleModule(
             $dataSource,
@@ -154,6 +155,57 @@ class BlogArticleModuleTest extends CrudModuleTest
         $expected->setId(1);
         $author->setId(1);
         $category->setId(1);
+
+        $this->assertEquals($expected, $article);
+    }
+
+
+    public function testEditAction()
+    {
+        $this->testCreate();
+
+        $article = $this->module->getEditAction()->run([
+            'object'           => 1,
+            'author'           => 1,
+            'category'         => 1,
+            'title'            => 'title',
+            'sub_title'        => 'sub-title',
+            'slug'             => 'slug',
+            'extract'          => 'extract',
+            'featured_image'   => [
+                'action' => UploadAction::STORE_NEW,
+                'file'   => new UploadedImageProxy(new Image(__DIR__ . '/storage/placeholder.png')),
+            ],
+            'date'             => 'Jan 1st 2000',
+            'article_content'  => 'content',
+            'allow_sharing'    => true,
+            'allow_commenting' => true,
+            'published'        => true,
+            'comments'         => [
+                ['author_name' => 'Test', 'author_email' => 'test@test.com', 'comment' => 'Test Comment'],
+            ],
+        ]);
+
+        $expected = new BlogArticle(
+            $author = new BlogAuthor('Name', 'slug', 'role', new Html('bio')),
+            $category = new BlogCategory('Category', 'category', true, new MockClock('2000-01-01 00:00:00')),
+            'title',
+            'sub-title',
+            'extract',
+            'slug',
+            $image = new Image(__DIR__ . '/storage/placeholder.png'),
+            new Date(2000, 01, 01),
+            new Html('content'),
+            true,
+            true,
+            true,
+            new MockClock('2000-01-01 00:00:00')
+        );
+        $image->getWidth();
+        $expected->setId(1);
+        $author->setId(1);
+        $category->setId(1);
+        $expected->postComment('Test', new EmailAddress('test@test.com'), 'Test Comment', new MockClock('2000-01-01 00:00:00'));
 
         $this->assertEquals($expected, $article);
     }

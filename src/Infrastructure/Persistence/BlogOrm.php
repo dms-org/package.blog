@@ -6,6 +6,7 @@ use Dms\Core\Ioc\IIocContainer;
 use Dms\Core\Persistence\Db\Mapping\Definition\Orm\OrmDefinition;
 use Dms\Core\Persistence\Db\Mapping\Orm;
 use Dms\Package\Blog\Domain\Entities\BlogArticle;
+use Dms\Package\Blog\Domain\Entities\BlogArticleComment;
 use Dms\Package\Blog\Domain\Entities\BlogAuthor;
 use Dms\Package\Blog\Domain\Entities\BlogCategory;
 
@@ -34,9 +35,10 @@ class BlogOrm extends Orm
     protected function define(OrmDefinition $orm)
     {
         $orm->entities([
-            BlogCategory::class => BlogCategoryMapper::class,
-            BlogAuthor::class   => BlogAuthorMapper::class,
-            BlogArticle::class  => BlogArticleMapper::class,
+            BlogCategory::class       => BlogCategoryMapper::class,
+            BlogAuthor::class         => BlogAuthorMapper::class,
+            BlogArticle::class        => BlogArticleMapper::class,
+            BlogArticleComment::class => BlogArticleCommentMapper::class,
         ]);
     }
 }

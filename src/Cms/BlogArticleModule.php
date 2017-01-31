@@ -13,6 +13,7 @@ use Dms\Core\Common\Crud\Definition\Table\SummaryTableDefinition;
 use Dms\Core\Util\IClock;
 use Dms\Library\Slug\Cms\SlugField;
 use Dms\Package\Blog\Domain\Entities\BlogArticle;
+use Dms\Package\Blog\Domain\Entities\BlogArticleComment;
 use Dms\Package\Blog\Domain\Entities\BlogAuthor;
 use Dms\Package\Blog\Domain\Entities\BlogCategory;
 use Dms\Package\Blog\Domain\Services\Config\BlogConfiguration;
@@ -153,10 +154,29 @@ class BlogArticleModule extends CrudModule
                 )->bindToProperty(BlogArticle::ALLOW_COMMENTING),
             ]);
 
+            $form->dependentOn(['allow_commenting'], function (CrudFormDefinition $form, array $input, BlogArticle $blogArticle = null) {
+                if ($input['allow_commenting'] && $blogArticle) {
+                    $form->section('Comments', [
+                        $form->field(
+                            Field::create('comments', 'Comments')->module(new BlogArticleCommentModule(
+                                $blogArticle,
+                                $this->authSystem,
+                                $this->clock,
+                                $this->blogConfiguration
+                            ))
+                        )->bindToProperty(BlogArticle::COMMENTS),
+                    ]);
+                }
+            });
+
             if ($form->isCreateForm()) {
                 $form->onSubmit(function (BlogArticle $blogArticle) {
                     $blogArticle->createdAt = new DateTime($this->clock->utcNow());
                     $blogArticle->updatedAt = new DateTime($this->clock->utcNow());
+
+                    if (!$blogArticle->comments) {
+                        $blogArticle->comments = BlogArticleComment::collection();
+                    }
                 });
             }
 

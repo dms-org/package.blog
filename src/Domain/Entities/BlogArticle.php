@@ -5,7 +5,10 @@ namespace Dms\Package\Blog\Domain\Entities;
 use Dms\Common\Structure\DateTime\Date;
 use Dms\Common\Structure\DateTime\DateTime;
 use Dms\Common\Structure\FileSystem\Image;
+use Dms\Common\Structure\Web\EmailAddress;
 use Dms\Common\Structure\Web\Html;
+use Dms\Core\Exception\InvalidOperationException;
+use Dms\Core\Model\EntityCollection;
 use Dms\Core\Model\Object\ClassDefinition;
 use Dms\Core\Model\Object\Entity;
 use Dms\Core\Util\IClock;
@@ -26,6 +29,7 @@ class BlogArticle extends Entity
     const FEATURED_IMAGE = 'featuredImage';
     const DATE = 'date';
     const ARTICLE_CONTENT = 'articleContent';
+    const COMMENTS = 'comments';
     const ALLOW_SHARING = 'allowSharing';
     const ALLOW_COMMENTING = 'allowCommenting';
     const PUBLISHED = 'published';
@@ -76,6 +80,11 @@ class BlogArticle extends Entity
      * @var Html
      */
     public $articleContent;
+
+    /**
+     * @var EntityCollection|BlogArticleComment
+     */
+    public $comments;
 
     /**
      * @var boolean
@@ -146,9 +155,10 @@ class BlogArticle extends Entity
         $this->articleContent  = $articleContent;
         $this->allowSharing    = $allowSharing;
         $this->allowCommenting = $allowCommenting;
-        $this->published        = $published;
+        $this->published       = $published;
         $this->createdAt       = new DateTime($clock->utcNow());
         $this->updatedAt       = new DateTime($clock->utcNow());
+        $this->comments        = BlogArticleComment::collection();
     }
 
 
@@ -166,7 +176,7 @@ class BlogArticle extends Entity
         $class->property($this->title)->asString();
 
         $class->property($this->subTitle)->asString();
-        
+
         $class->property($this->slug)->asString();
 
         $class->property($this->extract)->asString();
@@ -177,6 +187,8 @@ class BlogArticle extends Entity
 
         $class->property($this->articleContent)->asObject(Html::class);
 
+        $class->property($this->comments)->asType(BlogArticleComment::collectionType());
+
         $class->property($this->allowSharing)->asBool();
 
         $class->property($this->allowCommenting)->asBool();
@@ -186,5 +198,31 @@ class BlogArticle extends Entity
         $class->property($this->createdAt)->asObject(DateTime::class);
 
         $class->property($this->updatedAt)->asObject(DateTime::class);
+    }
+
+    /**
+     * @param string       $authorName
+     * @param EmailAddress $authorEmail
+     * @param string       $content
+     * @param IClock       $clock
+     *
+     * @return BlogArticleComment
+     */
+    public function postComment(string $authorName, EmailAddress $authorEmail, string $content, IClock $clock) : BlogArticleComment
+    {
+        InvalidOperationException::verify($this->published, 'This blog article is not published');
+        InvalidOperationException::verify($this->allowCommenting, 'This blog article does not allow comments');
+
+        $comment = new BlogArticleComment(
+            $this,
+            $authorName,
+            $authorEmail,
+            $content,
+            $clock
+        );
+
+        $this->comments[] = $comment;
+
+        return $comment;
     }
 }
