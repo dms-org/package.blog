@@ -30,13 +30,13 @@ class BlogArticleLoaderTest extends CmsTestCase
     {
         $articles = [
             new BlogArticle(
-                $this->getMockWithoutInvokingTheOriginalConstructor(BlogAuthor::class),
-                $this->getMockWithoutInvokingTheOriginalConstructor(BlogCategory::class),
+                $this->createMock(BlogAuthor::class),
+                $this->createMock(BlogCategory::class),
                 'title-1',
                 'sub-title',
                 'extract',
                 'some-slug',
-                $this->getMockWithoutInvokingTheOriginalConstructor(Image::class),
+                $this->createMock(Image::class),
                 new Date(2000, 01, 01),
                 new Html('content'),
                 true,
@@ -45,13 +45,13 @@ class BlogArticleLoaderTest extends CmsTestCase
                 new MockClock('2000-01-01 00:00:00')
             ),
             new BlogArticle(
-                $this->getMockWithoutInvokingTheOriginalConstructor(BlogAuthor::class),
-                $this->getMockWithoutInvokingTheOriginalConstructor(BlogCategory::class),
+                $this->createMock(BlogAuthor::class),
+                $this->createMock(BlogCategory::class),
                 'title-2',
                 'sub-title',
                 'extract',
                 'another-slug',
-                $this->getMockWithoutInvokingTheOriginalConstructor(Image::class),
+                $this->createMock(Image::class),
                 new Date(2000, 01, 01),
                 new Html('content'),
                 true,

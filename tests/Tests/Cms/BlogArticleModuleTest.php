@@ -212,7 +212,7 @@ class BlogArticleModuleTest extends CrudModuleTest
 
     public function testPreviewAction()
     {
-        $article                 = $this->getMockWithoutInvokingTheOriginalConstructor(BlogArticle::class);
+        $article                 = $this->createMock(BlogArticle::class);
         $article->articleContent = new Html('content');
         $this->dataSource->save($article);
 

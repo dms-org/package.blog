@@ -82,7 +82,7 @@ class BlogArticleMapper extends EntityMapper
 
         $map->embedded(BlogArticle::DATE)->using(new DateMapper('date'));
 
-        $map->embedded(BlogArticle::ARTICLE_CONTENT)->withIssetColumn('article_content')->using(new HtmlMapper('article_content'));
+        $map->embedded(BlogArticle::ARTICLE_CONTENT)->withIssetColumn('article_content')->using(HtmlMapper::withLongText('article_content'));
 
         $map->property(BlogArticle::ALLOW_SHARING)->to('allow_sharing')->asBool();
 
