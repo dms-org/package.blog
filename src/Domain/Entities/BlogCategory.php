@@ -7,6 +7,7 @@ use Dms\Core\Model\EntityCollection;
 use Dms\Core\Model\Object\ClassDefinition;
 use Dms\Core\Model\Object\Entity;
 use Dms\Core\Util\IClock;
+use Dms\Library\Metadata\Domain\IHasMetadata;
 use Dms\Library\Metadata\Domain\MetadataTrait;
 use Dms\Library\Metadata\Domain\ObjectMetadata;
 
@@ -15,7 +16,7 @@ use Dms\Library\Metadata\Domain\ObjectMetadata;
  *
  * @author ali Hamza <ali@iddigital.com.au>
  */
-class BlogCategory extends Entity
+class BlogCategory extends Entity implements IHasMetadata
 {
     use MetadataTrait;
 
@@ -25,7 +26,6 @@ class BlogCategory extends Entity
     const PUBLISHED = 'published';
     const CREATED_AT = 'createdAt';
     const UPDATED_AT = 'updatedAt';
-    const METADATA = 'metadata';
 
     /**
      * @var string

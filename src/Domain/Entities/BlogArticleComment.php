@@ -7,6 +7,7 @@ use Dms\Common\Structure\Web\EmailAddress;
 use Dms\Core\Model\Object\ClassDefinition;
 use Dms\Core\Model\Object\Entity;
 use Dms\Core\Util\IClock;
+use Dms\Library\Metadata\Domain\IHasMetadata;
 use Dms\Library\Metadata\Domain\MetadataTrait;
 use Dms\Library\Metadata\Domain\ObjectMetadata;
 
@@ -15,7 +16,7 @@ use Dms\Library\Metadata\Domain\ObjectMetadata;
  *
  * @author ali Hamza <ali@iddigital.com.au>
  */
-class BlogArticleComment extends Entity
+class BlogArticleComment extends Entity implements IHasMetadata
 {
     use MetadataTrait;
 
@@ -24,7 +25,6 @@ class BlogArticleComment extends Entity
     const AUTHOR_EMAIL = 'authorEmail';
     const CONTENT = 'content';
     const POSTED_AT = 'postedAt';
-    const METADATA = 'metadata';
 
     /**
      * @var BlogArticle

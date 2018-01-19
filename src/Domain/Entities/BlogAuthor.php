@@ -6,6 +6,7 @@ use Dms\Common\Structure\Web\Html;
 use Dms\Core\Model\EntityCollection;
 use Dms\Core\Model\Object\ClassDefinition;
 use Dms\Core\Model\Object\Entity;
+use Dms\Library\Metadata\Domain\IHasMetadata;
 use Dms\Library\Metadata\Domain\MetadataTrait;
 use Dms\Library\Metadata\Domain\ObjectMetadata;
 
@@ -14,7 +15,7 @@ use Dms\Library\Metadata\Domain\ObjectMetadata;
  *
  * @author Elliot Levin <elliotlevin@hotmail.com>
  */
-class BlogAuthor extends Entity
+class BlogAuthor extends Entity implements IHasMetadata
 {
     use MetadataTrait;
 
@@ -23,7 +24,6 @@ class BlogAuthor extends Entity
     const ROLE = 'role';
     const BIO = 'bio';
     const ARTICLES = 'articles';
-    const METADATA = 'metadata';
 
     /**
      * @var string
