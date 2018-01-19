@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 
 namespace Dms\Package\Blog\Domain\Entities;
 
@@ -12,6 +12,8 @@ use Dms\Core\Model\EntityCollection;
 use Dms\Core\Model\Object\ClassDefinition;
 use Dms\Core\Model\Object\Entity;
 use Dms\Core\Util\IClock;
+use Dms\Library\Metadata\Domain\MetadataTrait;
+use Dms\Library\Metadata\Domain\ObjectMetadata;
 
 /**
  * The blog article entity
@@ -20,6 +22,8 @@ use Dms\Core\Util\IClock;
  */
 class BlogArticle extends Entity
 {
+    use MetadataTrait;
+
     const AUTHOR = 'author';
     const CATEGORY = 'category';
     const TITLE = 'title';
@@ -35,6 +39,7 @@ class BlogArticle extends Entity
     const PUBLISHED = 'published';
     const CREATED_AT = 'createdAt';
     const UPDATED_AT = 'updatedAt';
+    const METADATA = 'metadata';
 
     /**
      * @var BlogAuthor|null
@@ -159,6 +164,7 @@ class BlogArticle extends Entity
         $this->createdAt       = new DateTime($clock->utcNow());
         $this->updatedAt       = new DateTime($clock->utcNow());
         $this->comments        = BlogArticleComment::collection();
+        $this->metadata        = new ObjectMetadata();
     }
 
 
@@ -198,6 +204,8 @@ class BlogArticle extends Entity
         $class->property($this->createdAt)->asObject(DateTime::class);
 
         $class->property($this->updatedAt)->asObject(DateTime::class);
+
+        $this->defineMetadata($class);
     }
 
     /**
@@ -208,7 +216,7 @@ class BlogArticle extends Entity
      *
      * @return BlogArticleComment
      */
-    public function postComment(string $authorName, EmailAddress $authorEmail, string $content, IClock $clock) : BlogArticleComment
+    public function postComment(string $authorName, EmailAddress $authorEmail, string $content, IClock $clock): BlogArticleComment
     {
         InvalidOperationException::verify($this->published, 'This blog article is not published');
         InvalidOperationException::verify($this->allowCommenting, 'This blog article does not allow comments');

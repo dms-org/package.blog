@@ -8,6 +8,7 @@ use Dms\Library\Testing\Helper\TestIocContainer;
 use Dms\Package\Blog\Cms\BlogPackage;
 use Dms\Package\Blog\Domain\Services\Config\BlogConfiguration;
 use Dms\Package\Blog\Infrastructure\Persistence\BlogOrm;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Elliot Levin <elliotlevin@hotmail.com>
@@ -17,7 +18,7 @@ class BlogIocContainer extends TestIocContainer
     /**
      * TestIocContainer constructor.
      */
-    public function __construct(\PHPUnit_Framework_TestCase $test)
+    public function __construct(TestCase $test)
     {
         parent::__construct();
 

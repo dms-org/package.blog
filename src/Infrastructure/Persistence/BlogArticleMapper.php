@@ -9,6 +9,7 @@ use Dms\Common\Structure\Web\Persistence\HtmlMapper;
 use Dms\Core\Persistence\Db\Mapping\Definition\MapperDefinition;
 use Dms\Core\Persistence\Db\Mapping\EntityMapper;
 use Dms\Core\Persistence\Db\Mapping\IOrm;
+use Dms\Library\Metadata\Infrastructure\Persistence\MetadataMapper;
 use Dms\Package\Blog\Domain\Entities\BlogArticle;
 use Dms\Package\Blog\Domain\Entities\BlogArticleComment;
 use Dms\Package\Blog\Domain\Entities\BlogAuthor;
@@ -93,5 +94,7 @@ class BlogArticleMapper extends EntityMapper
         $map->embedded(BlogArticle::CREATED_AT)->using(new DateTimeMapper('created_at'));
 
         $map->embedded(BlogArticle::UPDATED_AT)->using(new DateTimeMapper('updated_at'));
+
+        MetadataMapper::mapMetadataToJsonColumn($map, 'metadata');
     }
 }

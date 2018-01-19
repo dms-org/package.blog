@@ -76,6 +76,7 @@ class BlogCategoryModule extends CrudModule
 
             if ($form->isCreateForm()) {
                 $form->onSubmit(function (BlogCategory $blogCategory) {
+                    $blogCategory->getMetadata();
                     $blogCategory->articles  = BlogArticle::collection();
                     $blogCategory->createdAt = new DateTime($this->clock->utcNow());
                     $blogCategory->updatedAt = new DateTime($this->clock->utcNow());

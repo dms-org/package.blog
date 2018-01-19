@@ -7,6 +7,8 @@ use Dms\Common\Structure\Web\EmailAddress;
 use Dms\Core\Model\Object\ClassDefinition;
 use Dms\Core\Model\Object\Entity;
 use Dms\Core\Util\IClock;
+use Dms\Library\Metadata\Domain\MetadataTrait;
+use Dms\Library\Metadata\Domain\ObjectMetadata;
 
 /**
  * The blog article comment entity
@@ -15,11 +17,14 @@ use Dms\Core\Util\IClock;
  */
 class BlogArticleComment extends Entity
 {
+    use MetadataTrait;
+
     const ARTICLE = 'article';
     const AUTHOR_NAME = 'authorName';
     const AUTHOR_EMAIL = 'authorEmail';
     const CONTENT = 'content';
     const POSTED_AT = 'postedAt';
+    const METADATA = 'metadata';
 
     /**
      * @var BlogArticle
@@ -63,6 +68,7 @@ class BlogArticleComment extends Entity
         $this->authorEmail = $authorEmail;
         $this->content     = $content;
         $this->postedAt    = new DateTime($clock->utcNow());
+        $this->metadata        = new ObjectMetadata();
     }
 
 
@@ -82,5 +88,7 @@ class BlogArticleComment extends Entity
         $class->property($this->content)->asString();
 
         $class->property($this->postedAt)->asObject(DateTime::class);
+
+        $this->defineMetadata($class);
     }
 }

@@ -171,6 +171,7 @@ class BlogArticleModule extends CrudModule
 
             if ($form->isCreateForm()) {
                 $form->onSubmit(function (BlogArticle $blogArticle) {
+                    $blogArticle->getMetadata();
                     $blogArticle->createdAt = new DateTime($this->clock->utcNow());
                     $blogArticle->updatedAt = new DateTime($this->clock->utcNow());
 

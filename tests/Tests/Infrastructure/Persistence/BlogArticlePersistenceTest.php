@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 
 namespace Dms\Package\Blog\Tests\Infrastructure\Persistence;
 
@@ -14,7 +14,7 @@ use Dms\Package\Blog\Domain\Entities\BlogCategory;
  */
 class BlogArticlePersistenceTest extends PersistenceTest
 {
-    protected function getEntityClass() : string
+    protected function getEntityClass(): string
     {
         return BlogArticle::class;
     }
@@ -60,15 +60,19 @@ class BlogArticlePersistenceTest extends PersistenceTest
                     'published'                => true,
                     'created_at'               => '2000-01-01 00:00:00',
                     'updated_at'               => '2000-01-01 00:00:00',
+                    'metadata'                 => '[]',
+
                 ],
             ],
             'authors'    => [
                 [
-                    'id'   => 1,
-                    'name' => 'test',
-                    'role' => 'slug',
-                    'slug' => 'role',
-                    'bio'  => 'bio',
+                    'id'       => 1,
+                    'name'     => 'test',
+                    'role'     => 'slug',
+                    'slug'     => 'role',
+                    'bio'      => 'bio',
+                    'metadata' => '[]',
+
                 ],
             ],
             'categories' => [
@@ -79,6 +83,7 @@ class BlogArticlePersistenceTest extends PersistenceTest
                     'published'  => true,
                     'created_at' => '2000-01-01 00:00:00',
                     'updated_at' => '2000-01-01 00:00:00',
+                    'metadata'   => '[]',
                 ],
             ],
         ]);

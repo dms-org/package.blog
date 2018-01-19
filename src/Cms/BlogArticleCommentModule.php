@@ -12,6 +12,7 @@ use Dms\Core\Common\Crud\Definition\Table\SummaryTableDefinition;
 use Dms\Core\Common\Crud\ICrudModule;
 use Dms\Core\Model\IMutableObjectSet;
 use Dms\Core\Util\IClock;
+use Dms\Library\Metadata\Domain\ObjectMetadata;
 use Dms\Package\Blog\Domain\Entities\BlogArticle;
 use Dms\Package\Blog\Domain\Entities\BlogArticleComment;
 use Dms\Package\Blog\Domain\Services\Config\BlogConfiguration;
@@ -93,6 +94,7 @@ class BlogArticleCommentModule extends CrudModule
 
             if ($form->isCreateForm()) {
                 $form->onSubmit(function (BlogArticleComment $comment) {
+                    $comment->getMetadata();
                     $comment->postedAt = new DateTime($this->clock->utcNow());
                 });
             } else {

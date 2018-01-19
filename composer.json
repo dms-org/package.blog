@@ -20,9 +20,10 @@
     },
     "require": {
         "php": ">=7.0.0",
-        "dms-org/core": "^0.8",
-        "dms-org/common.structure": "^0.8",
-        "dms-org/library.slug": "^0.8.0"
+        "dms-org/core": "^0.8.0",
+        "dms-org/common.structure": "^0.8.0",
+        "dms-org/library.slug": "^0.8.0",
+        "dms-org/library.metadata": "^0.8.0"
     },
     "autoload-dev": {
         "psr-4": {

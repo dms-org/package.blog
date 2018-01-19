@@ -5,6 +5,7 @@ namespace Dms\Package\Blog\Infrastructure\Persistence;
 use Dms\Common\Structure\DateTime\Persistence\DateTimeMapper;
 use Dms\Core\Persistence\Db\Mapping\Definition\MapperDefinition;
 use Dms\Core\Persistence\Db\Mapping\EntityMapper;
+use Dms\Library\Metadata\Infrastructure\Persistence\MetadataMapper;
 use Dms\Package\Blog\Domain\Entities\BlogArticle;
 use Dms\Package\Blog\Domain\Entities\BlogCategory;
 
@@ -43,5 +44,7 @@ class BlogCategoryMapper extends EntityMapper
             ->toMany()
             ->withBidirectionalRelation(BlogArticle::AUTHOR)
             ->withParentIdAs($map->getOrm()->getNamespace() . 'category_id');
+
+        MetadataMapper::mapMetadataToJsonColumn($map, 'metadata');
     }
 }

@@ -70,6 +70,7 @@ class BlogAuthorModule extends CrudModule
 
             if ($form->isCreateForm()) {
                 $form->onSubmit(function (BlogAuthor $blogAuthor) {
+                    $blogAuthor->getMetadata();
                     $blogAuthor->articles = BlogArticle::collection();
                 });
             }

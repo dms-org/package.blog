@@ -1,15 +1,13 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 
 namespace Dms\Package\Blog\Domain\Entities;
 
-use Dms\Common\Structure\DateTime\Date;
-use Dms\Common\Structure\DateTime\DateTime;
-use Dms\Common\Structure\FileSystem\Image;
 use Dms\Common\Structure\Web\Html;
-use Dms\Common\Structure\Web\Url;
 use Dms\Core\Model\EntityCollection;
 use Dms\Core\Model\Object\ClassDefinition;
 use Dms\Core\Model\Object\Entity;
+use Dms\Library\Metadata\Domain\MetadataTrait;
+use Dms\Library\Metadata\Domain\ObjectMetadata;
 
 /**
  * The blog author entity
@@ -18,11 +16,14 @@ use Dms\Core\Model\Object\Entity;
  */
 class BlogAuthor extends Entity
 {
+    use MetadataTrait;
+
     const NAME = 'name';
     const SLUG = 'slug';
     const ROLE = 'role';
     const BIO = 'bio';
     const ARTICLES = 'articles';
+    const METADATA = 'metadata';
 
     /**
      * @var string
@@ -60,11 +61,12 @@ class BlogAuthor extends Entity
     public function __construct(string $name, string $slug, string $role, Html $bio)
     {
         parent::__construct();
-        $this->name = $name;
-        $this->slug = $slug;
-        $this->role = $role;
-        $this->bio  = $bio;
+        $this->name     = $name;
+        $this->slug     = $slug;
+        $this->role     = $role;
+        $this->bio      = $bio;
         $this->articles = BlogArticle::collection();
+        $this->metadata = new ObjectMetadata();
     }
 
     /**
@@ -75,13 +77,15 @@ class BlogAuthor extends Entity
     protected function defineEntity(ClassDefinition $class)
     {
         $class->property($this->name)->asString();
-        
+
         $class->property($this->slug)->asString();
-        
+
         $class->property($this->role)->asString();
-        
+
         $class->property($this->bio)->asObject(Html::class);
-        
+
         $class->property($this->articles)->asType(BlogArticle::collectionType());
+
+        $this->defineMetadata($class);
     }
 }

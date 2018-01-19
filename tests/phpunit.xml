@@ -3,6 +3,7 @@
     backupGlobals="false"
     stopOnFailure="false"
     colors="true"
+    beStrictAboutTestsThatDoNotTestAnything="false"
     bootstrap="./Runner.php">
 
     <testsuites>

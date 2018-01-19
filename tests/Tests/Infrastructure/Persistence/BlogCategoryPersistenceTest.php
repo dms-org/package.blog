@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 
 namespace Dms\Package\Blog\Tests\Infrastructure\Persistence;
 
@@ -9,7 +9,7 @@ use Dms\Package\Blog\Domain\Entities\BlogCategory;
  */
 class BlogCategoryPersistenceTest extends PersistenceTest
 {
-    protected function getEntityClass() : string
+    protected function getEntityClass(): string
     {
         return BlogCategory::class;
     }
@@ -34,6 +34,7 @@ class BlogCategoryPersistenceTest extends PersistenceTest
                     'published'  => true,
                     'created_at' => '2000-01-01 00:00:00',
                     'updated_at' => '2000-01-01 00:00:00',
+                    'metadata'   => '[]',
                 ],
             ],
         ]);

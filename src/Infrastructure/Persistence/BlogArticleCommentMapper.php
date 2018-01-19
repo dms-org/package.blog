@@ -7,6 +7,7 @@ use Dms\Common\Structure\Web\Persistence\EmailAddressMapper;
 use Dms\Core\Persistence\Db\Mapping\Definition\MapperDefinition;
 use Dms\Core\Persistence\Db\Mapping\EntityMapper;
 use Dms\Core\Persistence\Db\Mapping\IOrm;
+use Dms\Library\Metadata\Infrastructure\Persistence\MetadataMapper;
 use Dms\Package\Blog\Domain\Entities\BlogArticle;
 use Dms\Package\Blog\Domain\Entities\BlogArticleComment;
 use Dms\Package\Blog\Domain\Services\Config\BlogConfiguration;
@@ -58,5 +59,7 @@ class BlogArticleCommentMapper extends EntityMapper
 
         $map->embedded(BlogArticleComment::POSTED_AT)
             ->using(new DateTimeMapper('posted_at'));
+
+        MetadataMapper::mapMetadataToJsonColumn($map, 'metadata');
     }
 }
