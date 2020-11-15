@@ -30,7 +30,7 @@ class BlogCategoryLoaderTest extends CmsTestCase
      */
     protected $loader;
 
-    public function setUp()
+    public function setUp(): void
     {
         $categories = [
             new BlogCategory('1', 'some-slug', true, new MockClock('2000-01-01 00:00:00')),

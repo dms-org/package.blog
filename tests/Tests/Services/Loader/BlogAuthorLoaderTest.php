@@ -28,7 +28,7 @@ class BlogAuthorLoaderTest extends CmsTestCase
      */
     protected $loader;
 
-    public function setUp()
+    public function setUp(): void
     {
         $authors = [
             new BlogAuthor('1', 'some-slug', 'role', new Html('bio')),

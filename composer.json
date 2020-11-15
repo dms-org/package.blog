@@ -20,10 +20,11 @@
     },
     "require": {
         "php": ">=7.0.0",
-        "dms-org/core": "^0.8.0",
-        "dms-org/common.structure": "^0.8.0",
-        "dms-org/library.slug": "^0.8.0",
-        "dms-org/library.metadata": "^0.8.0"
+        "dms-org/core": "dev-upgrade",
+        "timetoogo/pinq": "dev-upgrade",
+        "dms-org/common.structure": "dev-upgrade",
+        "dms-org/library.slug": "dev-upgrade",
+        "dms-org/library.metadata": "dev-upgrade"
     },
     "autoload-dev": {
         "psr-4": {
@@ -32,7 +33,7 @@
         }
     },
     "require-dev": {
-        "dms-org/common.testing": "dev-master",
-        "dms-org/library.testing": "^0.8.0"
+        "dms-org/common.testing": "dev-upgrade",
+        "dms-org/library.testing": "dev-upgrade"
     }
 }

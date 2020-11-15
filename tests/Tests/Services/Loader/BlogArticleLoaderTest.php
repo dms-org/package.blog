@@ -26,7 +26,7 @@ class BlogArticleLoaderTest extends CmsTestCase
      */
     protected $loader;
 
-    public function setUp()
+    public function setUp(): void
     {
         $articles = [
             new BlogArticle(
